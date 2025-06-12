@@ -6,6 +6,20 @@ let score = JSON.parse(localStorage.getItem('score')) ||
 };
 ;
 updateScoreElement();
+document.querySelector('.js-rock-button').addEventListener('click',()=>{
+  playGame('rock');
+});
+document.querySelector('.js-paper-button').addEventListener('click',()=>{
+  playGame('paper');
+});
+document.querySelector('.js-scissors-button').addEventListener('click',()=>{
+  playGame('scissors');
+});
+document.body.addEventListener('keydown',(event)=>{
+  if(event.key==='r') playGame('rock');
+  else if(event.key==='p') playGame('paper');
+  else if(event.key==='s') playGame('scissors');
+})
 function playGame(playerMove) {
   const computerMove = pickComputerMove();
   let result = '';
@@ -70,7 +84,7 @@ let intervalId;
 function autoplay() {
   if (!isAutoPlaying) {
     document.querySelector('.js-auto-play-button').innerHTML = "Stop Auto Play";
-    intervalId=setInterval(function () {
+    intervalId=setInterval( () => {
       const playerMove = pickComputerMove();
       playGame(playerMove);
     }, 1000);
