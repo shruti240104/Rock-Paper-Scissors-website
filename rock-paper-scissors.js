@@ -6,20 +6,30 @@ let score = JSON.parse(localStorage.getItem('score')) ||
 };
 ;
 updateScoreElement();
-document.querySelector('.js-rock-button').addEventListener('click',()=>{
+document.querySelector('.js-rock-button').addEventListener('click', () => {
   playGame('rock');
 });
-document.querySelector('.js-paper-button').addEventListener('click',()=>{
+document.querySelector('.js-paper-button').addEventListener('click', () => {
   playGame('paper');
 });
-document.querySelector('.js-scissors-button').addEventListener('click',()=>{
+document.querySelector('.js-scissors-button').addEventListener('click', () => {
   playGame('scissors');
 });
-document.body.addEventListener('keydown',(event)=>{
-  if(event.key==='r') playGame('rock');
-  else if(event.key==='p') playGame('paper');
-  else if(event.key==='s') playGame('scissors');
-})
+document.body.addEventListener('keydown', (event) => {
+  if (event.key === 'r') playGame('rock');
+  else if (event.key === 'p') playGame('paper');
+  else if (event.key === 's') playGame('scissors');
+  else if (event.key === 'a') autoplay();
+  else if (event.key === 'Backspace') {
+    showconfirmation();
+  };
+});
+document.querySelector('.js-auto-play-button').addEventListener('click', () => {
+  autoplay();
+});
+document.querySelector('.js-reset-score-button').addEventListener('click', () => {
+  showconfirmation();
+});
 function playGame(playerMove) {
   const computerMove = pickComputerMove();
   let result = '';
@@ -84,14 +94,31 @@ let intervalId;
 function autoplay() {
   if (!isAutoPlaying) {
     document.querySelector('.js-auto-play-button').innerHTML = "Stop Auto Play";
-    intervalId=setInterval( () => {
+    intervalId = setInterval(() => {
       const playerMove = pickComputerMove();
       playGame(playerMove);
     }, 1000);
-    isAutoPlaying=true;
-  }else{
+    isAutoPlaying = true;
+  } else {
     clearInterval(intervalId);
-    isAutoPlaying=false;
+    isAutoPlaying = false;
     document.querySelector('.js-auto-play-button').innerHTML = "Auto Play";
   }
+}
+function reset() {
+  score.wins = 0;
+  score.losses = 0;
+  score.ties = 0;
+  localStorage.removeItem('score');
+  updateScoreElement();
+}
+function showconfirmation() {
+  document.querySelector('.js-confirmation-message').innerHTML = 'Are you sure you want to reset the score? <button class="js-yes-button">Yes</button> <button class="js-no-button">No</button>';
+  document.querySelector('.js-no-button').addEventListener('click', () => {
+    document.querySelector('.js-confirmation-message').innerHTML = "";
+  });
+  document.querySelector('.js-yes-button').addEventListener('click', () => {
+    document.querySelector('.js-confirmation-message').innerHTML = "";
+    reset();
+  });
 }
